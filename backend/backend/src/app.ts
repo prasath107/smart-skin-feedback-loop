@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import uploadRoutes from "./routes/upload.routes";
 import analyzeRoutes from "./routes/analyze.routes";
-import { products } from "./dataLoader";   // ✅ NEW IMPORT
+import { products } from "./dataLoader";
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 });
 
 
-// ✅ ✅ NEW SMART SKIN RECOMMENDATION ROUTE
+// ✅ SMART SKIN RECOMMENDATION ROUTE
 app.get("/api/recommend", (req, res) => {
   const problem = String(req.query.problem || "").toLowerCase();
 
@@ -37,7 +37,7 @@ app.get("/api/recommend", (req, res) => {
 
   const results = products
     .filter(p =>
-      keys.some(k =>
+      keys.some((k: string) =>   // ✅ FIXED HERE
         (p.ingredients || "").toLowerCase().includes(k)
       )
     )
@@ -45,6 +45,5 @@ app.get("/api/recommend", (req, res) => {
 
   res.json(results);
 });
-
 
 export default app;
