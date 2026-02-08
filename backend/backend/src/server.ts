@@ -1,10 +1,10 @@
 import app from "./app";
 import { loadProducts } from "./dataLoader";
 
-const PORT = 5000;
-
 loadProducts().then(() => {
+  const PORT = process.env.PORT || 5000;
+
   app.listen(PORT, () => {
-    console.log("✅ Backend running at http://localhost:5000");
+    console.log(`🚀 Server running on port ${PORT}`);
   });
 });
