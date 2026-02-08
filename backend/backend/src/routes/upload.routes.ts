@@ -22,7 +22,6 @@ router.post("/", upload.single("image"), (req, res) => {
     return res.status(400).json({ error: "No image uploaded" });
   }
 
-  // ✅ Build correct public URL for Render
   const imageUrl =
     "https://smart-skin-feedback-loop.onrender.com/uploads/" +
     req.file.filename;
@@ -32,5 +31,4 @@ router.post("/", upload.single("image"), (req, res) => {
     imageUrl,
   });
 });
-
 export default router;
