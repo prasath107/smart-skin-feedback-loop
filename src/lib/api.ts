@@ -1,5 +1,4 @@
-const BASE_URL = "http://localhost:5000";
-
+const BASE_URL = "https://smart-skin-feedback-loop.onrender.com";
 export async function uploadImage(file: File) {
   const formData = new FormData();
   formData.append("image", file);

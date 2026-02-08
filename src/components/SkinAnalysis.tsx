@@ -24,7 +24,6 @@ interface SkinAnalysisProps {
 }
 
 const SkinAnalysis: React.FC<SkinAnalysisProps> = ({ results, image }) => {
-
   const [products, setProducts] = useState<any[]>([]);
 
   function mapIssueToProblem(): string | null {
@@ -39,12 +38,21 @@ const SkinAnalysis: React.FC<SkinAnalysisProps> = ({ results, image }) => {
     return "acne";
   }
 
+  // ✅ FIXED — use Render backend instead of localhost
   async function loadRecommendations(problem: string) {
-    const res = await fetch(
-      "http://localhost:5000/api/recommend?problem=" + problem
-    );
-    const data = await res.json();
-    setProducts(data);
+    try {
+      const res = await fetch(
+        "https://smart-skin-feedback-loop.onrender.com/api/recommend?problem=" + problem
+      );
+
+      if (!res.ok) throw new Error("API failed");
+
+      const data = await res.json();
+      setProducts(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Recommendation fetch failed:", err);
+      setProducts([]);
+    }
   }
 
   useEffect(() => {
@@ -113,7 +121,7 @@ const SkinAnalysis: React.FC<SkinAnalysisProps> = ({ results, image }) => {
         </CardContent>
       </Card>
 
-      {/* ✅ DATASET PRODUCT CARDS — FIXED */}
+      {/* Recommended Products */}
       {products.length > 0 && (
         <Card>
           <CardHeader>
