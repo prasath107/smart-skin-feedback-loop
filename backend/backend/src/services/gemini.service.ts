@@ -1,8 +1,12 @@
 export async function analyzeSkin(imageUrl: string) {
   const apiKey = process.env.GEMINI_API_KEY;
 
+  if (!apiKey) {
+    throw new Error("Missing GEMINI_API_KEY");
+  }
+
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
     {
       method: "POST",
       headers: {
@@ -14,11 +18,9 @@ export async function analyzeSkin(imageUrl: string) {
             parts: [
               {
                 text: `
-Analyze the face skin.
+Analyze this face skin image.
 
-Return ONLY JSON.
-
-Format:
+Return ONLY JSON:
 {
   "acne": number (0-1),
   "dryness": number (0-1),
@@ -26,10 +28,13 @@ Format:
   "redness": number (0-1),
   "summary": string
 }
-
-Do not explain.
-Only JSON.
 `
+              },
+              {
+                file_data: {
+                  mime_type: "image/jpeg",
+                  file_uri: imageUrl
+                }
               }
             ]
           }
@@ -40,8 +45,12 @@ Only JSON.
 
   const data = await response.json();
 
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-  const cleanText = text.replace(/```json|```/g, "").trim();
+  console.log("Gemini raw:", data);
 
-  return JSON.parse(cleanText);
+  const text =
+    data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+
+  const clean = text.replace(/```json|```/g, "").trim();
+
+  return JSON.parse(clean);
 }
