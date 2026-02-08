@@ -1,5 +1,15 @@
 const BASE_URL = "https://smart-skin-feedback-loop.onrender.com";
 
+export async function uploadImage(formData: FormData) {
+  const res = await fetch(`${BASE_URL}/api/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) throw new Error("Upload failed");
+  return res.json();
+}
+
 export async function analyzeSkin(formData: FormData) {
   const res = await fetch(`${BASE_URL}/api/analyze`, {
     method: "POST",
