@@ -9,7 +9,8 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const uniqueName =
+      Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, uniqueName + path.extname(file.originalname));
   },
 });
@@ -21,7 +22,10 @@ router.post("/", upload.single("image"), (req, res) => {
     return res.status(400).json({ error: "No image uploaded" });
   }
 
-  const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+  // ✅ Build correct public URL for Render
+  const imageUrl =
+    "https://smart-skin-feedback-loop.onrender.com/uploads/" +
+    req.file.filename;
 
   res.json({
     message: "Image uploaded successfully ✅",
